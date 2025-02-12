@@ -1,52 +1,61 @@
-import Hotel from '../model/hotelModel.js'; // Updated import for Hotel model
-import { uploadImageToFirebase } from '../utility/firebaseCon.js';
+import Hotel from '../model/hotelModel.js'; 
+import { uploadImageToFirebase } from '../utility/firebaseCon.js'; 
 
 export const addHotel = async (req, res) => {
     try {
-      const { name, type, address, email, phone, pricePerNight, pricePerDay, numberOfRoomsAvailable, images } = req.body;
+        const { name, type, address, email, phone, pricePerNight, pricePerDay, numberOfRoomsAvailable } = req.body;
   
-      if (!name || !type || !address || !email || !phone || !pricePerNight || !pricePerDay || !numberOfRoomsAvailable) {
-        return res.status(400).json({ error: 'Missing required fields' });
-      }
-  
-      // Validate email
-      const emailRegex = /\S+@\S+\.\S+/;
-      if (email && !emailRegex.test(email)) {
-        return res.status(400).json({ error: 'Invalid email format' });
-      }
-  
-      // Upload images if provided
-      const uploadedImages = [];
-      if (req.files) {
-        for (const file of req.files) {
-          const imageUrl = await uploadImageToFirebase(file);
-          uploadedImages.push({
-            url: imageUrl,
-            title: req.body[`title_${file.originalname}`] || 'Untitled',
-            caption: req.body[`caption_${file.originalname}`] || 'No caption provided',
-          });
+        if (!name || !type || !address || !email || !phone || !pricePerNight || !pricePerDay || !numberOfRoomsAvailable) {
+            return res.status(400).json({ error: 'Missing required fields' });
         }
-      }
   
-      const hotel = new Hotel({
-        name,
-        type,
-        address,
-        email,
-        phone,
-        pricePerNight,
-        pricePerDay,
-        numberOfRoomsAvailable,
-        images: uploadedImages,
-        userID: req.user.id,
-      });
+        // Validate email
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (email && !emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
   
-      const savedHotel = await hotel.save();
-      res.status(201).json(savedHotel);
+        // Upload images if provided
+        const uploadedImages = [];
+        if (req.files) {
+            for (const file of req.files) {
+                // Get title and caption dynamically based on the image name
+                const title = req.body[`title_${file.originalname}`] || 'Untitled';
+                const caption = req.body[`caption_${file.originalname}`] || 'No caption provided';
+                
+                // Upload image to Firebase (or your image storage solution)
+                const imageUrl = await uploadImageToFirebase(file);
+  
+                // Push image details (URL, title, caption) to the array
+                uploadedImages.push({
+                    url: imageUrl,
+                    title: title,
+                    caption: caption,
+                });
+            }
+        }
+  
+        // Create new hotel record
+        const hotel = new Hotel({
+            name,
+            type,
+            address,
+            email,
+            phone,
+            pricePerNight,
+            pricePerDay,
+            numberOfRoomsAvailable,
+            images: uploadedImages,
+            userID: req.user.id,
+        });
+  
+        // Save hotel to database
+        const savedHotel = await hotel.save();
+        res.status(201).json(savedHotel);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
-  };
+};
 // Update Hotel
 export const updateHotel = async (req, res) => {
     try {
