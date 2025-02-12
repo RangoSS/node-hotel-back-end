@@ -1,0 +1,11 @@
+curl -X POST http://localhost:3000/api/register \
+     -H "Content-Type: application/json" \
+     -d '{
+           "name": "mike", 
+           "surname": "tshimota", 
+           "phone": "1234567890",
+           "address": "123 Main St",
+           "role": "admin", 
+           "email": "mike@gmail.com", 
+           "password": "mike123" 
+         }'
