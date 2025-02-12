@@ -83,4 +83,19 @@ export  const loginUser = async (req, res) => {
     }
 };
 
+// Get All Users
+export const getAllUsers = async (req, res) => {
+    try {
+      const users = await User.find().select("-password"); // Exclude passwords for security
+  
+      if (users.length === 0) {
+        return res.status(404).json({ message: "No users found" });
+      }
+  
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+  };
+
 
