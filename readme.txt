@@ -79,3 +79,15 @@ curl -X PUT http://localhost:3000/api/hotel/67aca8dc7848a1aa8da58607 \
 
 curl -X GET "http://localhost:3000/api/hotel/67ac587cf7a5dd7ec45a50e9" \
      -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YWM1ODdjZjdhNWRkN2VjNDVhNTBlOSIsIm5hbWUiOiJtaWtlIiwiaWF0IjoxNzM5NDM2NzYyLCJleHAiOjE3Mzk0NTQ3NjJ9.w84CtLmI1ND9EdK_TgVDsuo5-Jzk7LTKwoXWzTldrtU"
+
+
+//booking 
+curl -X POST http://localhost:3000/api/booking \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YWM1ODdjZjdhNWRkN2VjNDVhNTBlOSIsIm5hbWUiOiJtaWtlIiwiaWF0IjoxNzM5NDQ1NTkxLCJleHAiOjE3Mzk0NjM1OTF9.cAuESCY8h9Hjo4wyQDi-FrCYhTIk4kJejvsjvK9y6SI" \
+  -d '{
+    "hotelId": "67aca8dc7848a1aa8da58607",
+    "numberOfRooms": 2,
+    "numberOfPeople": 4,
+    "bookingType": "individual"
+  }'
