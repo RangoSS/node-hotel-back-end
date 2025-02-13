@@ -1,0 +1,25 @@
+<!-- Include Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+  // Initialize Stripe with your publishable key
+  const stripe = Stripe('your-publishable-key-here'); // Replace with your actual publishable key
+
+  // This function will handle the payment submission
+  async function handlePayment(paymentIntentId) {
+    const { error, paymentIntent } = await stripe.confirmCardPayment(paymentIntentId, {
+      payment_method: {
+        card: cardElement, // Assume cardElement is your card input field
+      },
+    });
+
+    if (error) {
+      console.log("Payment failed: ", error.message);
+    } else if (paymentIntent.status === 'succeeded') {
+      console.log("Payment succeeded: ", paymentIntent);
+      // Update the UI with success message or redirect the user
+    }
+  }
+
+  // On page load, you can fetch the clientSecret from your API and call handlePayment
+</script>

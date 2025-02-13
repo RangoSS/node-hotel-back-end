@@ -7,6 +7,7 @@ import {getUserProfile ,updateUserProfile,deleteUserProfile} from "../controller
 import {addHotel,updateHotel,deleteHotel,getAllHotels,getAllHotelsAdmin} from "../controller/hotellController.js"
 import { protect } from "../middleware/authMiddleware.js";
 import upload from "../middleware/upload.js"
+import {bookHotel} from "../controller/bookHotel.js"
 const router = express.Router();
 
 router.post("/register", registerUser);
@@ -20,6 +21,7 @@ router.put("/hotel/:id",protect,upload.array('images',5), updateHotel);
 router.delete("/hotel/:id",protect, deleteHotel);
 router.get("/hotel/:id",protect, getAllHotels);
 router.get("/hotel",protect, getAllHotelsAdmin);
+router.post("/booking",protect, bookHotel);
 
 
 
