@@ -16,9 +16,9 @@ router.put("/user/:id",protect, updateUserProfile);
 router.delete("/user/:id",protect, deleteUserProfile);
 router.get("/user", getAllUsers);
 router.post("/hotel",protect,upload.array('images',5), addHotel);
-router.put("/hotel/:id",protect, updateHotel);
+router.put("/hotel/:id",protect,upload.array('images',5), updateHotel);
 router.delete("/hotel/:id",protect, deleteHotel);
-router.get("/hotel",protect, getAllHotels);
+router.get("/hotel/:id",protect, getAllHotels);
 router.get("/hotel",protect, getAllHotelsAdmin);
 
 

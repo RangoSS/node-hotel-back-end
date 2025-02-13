@@ -58,61 +58,65 @@ export const addHotel = async (req, res) => {
 };
 // Update Hotel
 export const updateHotel = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { name, type, address, email, phone, pricePerNight, pricePerDay, numberOfRoomsAvailable, images } = req.body;
-  
-      // Find the hotel by ID
-      let hotel = await Hotel.findById(id);
-      if (!hotel) {
-        return res.status(404).json({ error: 'Hotel not found' });
-      }
-  
-      // Validate email if provided
-      const emailRegex = /\S+@\S+\.\S+/;
-      if (email && !emailRegex.test(email)) {
-        return res.status(400).json({ error: 'Invalid email format' });
-      }
-  
-      // Upload new images if provided
-      const uploadedImages = hotel.images || [];
-      if (req.files) {
-        for (const file of req.files) {
-          const imageUrl = await uploadImageToFirebase(file);
-          uploadedImages.push({
-            url: imageUrl,
-            title: req.body[`title_${file.originalname}`] || 'Untitled',
-            caption: req.body[`caption_${file.originalname}`] || '',
-          });
-        }
-      }
-  
-      // Update hotel details
-      hotel.name = name || hotel.name;
-      hotel.type = type || hotel.type;
-      hotel.address = address || hotel.address;
-      hotel.email = email || hotel.email;
-      hotel.phone = phone || hotel.phone;
-      hotel.pricePerNight = pricePerNight || hotel.pricePerNight;
-      hotel.pricePerDay = pricePerDay || hotel.pricePerDay;
-      hotel.numberOfRoomsAvailable = numberOfRoomsAvailable || hotel.numberOfRoomsAvailable;
-      hotel.images = uploadedImages;
-  
-      // Save updated hotel
-      const updatedHotel = await hotel.save();
-      res.status(200).json(updatedHotel);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  };
-  
+  try {
+    const { id } = req.params;
+    const { name, type, address, email, phone, pricePerNight, pricePerDay, numberOfRoomsAvailable } = req.body;
 
+    // Find the hotel by ID
+    let hotel = await Hotel.findById(id);
+    if (!hotel) {
+      return res.status(404).json({ error: 'Hotel not found' });
+    }
+
+    // Validate email if provided
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (email && !emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    // If new images are uploaded, replace old images
+    let uploadedImages = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const imageUrl = await uploadImageToFirebase(file);
+        uploadedImages.push({
+          url: imageUrl,
+          title: req.body[`title_${file.originalname}`] || 'Untitled',
+          caption: req.body[`caption_${file.originalname}`] || '',
+        });
+      }
+    } else {
+      uploadedImages = hotel.images; // Keep old images if no new ones uploaded
+    }
+
+    // Update hotel details
+    hotel.name = name || hotel.name;
+    hotel.type = type || hotel.type;
+    hotel.address = address || hotel.address;
+    hotel.email = email || hotel.email;
+    hotel.phone = phone || hotel.phone;
+    hotel.pricePerNight = pricePerNight || hotel.pricePerNight;
+    hotel.pricePerDay = pricePerDay || hotel.pricePerDay;
+    hotel.numberOfRoomsAvailable = numberOfRoomsAvailable || hotel.numberOfRoomsAvailable;
+
+    // Replace images only if new ones were uploaded
+    if (req.files && req.files.length > 0) {
+      hotel.images = uploadedImages;
+    }
+
+    // Save updated hotel
+    const updatedHotel = await hotel.save();
+    res.status(200).json(updatedHotel);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 // Delete Hotel
 export const deleteHotel = async (req, res) => {
   try {
-    const { hotelId } = req.params;
+    const { id } = req.params;
 
-    const hotel = await Hotel.findById(hotelId);
+    const hotel = await Hotel.findById(id);
 
     if (!hotel) {
       return res.status(404).json({ error: 'Hotel not found' });

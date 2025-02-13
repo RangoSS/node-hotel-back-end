@@ -60,3 +60,22 @@ curl -X POST http://localhost:3000/api/hotel \
      -F "title_hotel2.jpg=Hotel Room" \
      -F "caption_hotel2.jpg=Luxurious room with a king-sized bed"
 
+curl -X PUT http://localhost:3000/api/hotel/67aca8dc7848a1aa8da58607 \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YWM1ODdjZjdhNWRkN2VjNDVhNTBlOSIsIm5hbWUiOiJtaWtlIiwiaWF0IjoxNzM5NDM2NzYyLCJleHAiOjE3Mzk0NTQ3NjJ9.w84CtLmI1ND9EdK_TgVDsuo5-Jzk7LTKwoXWzTldrtU" \
+     -F "name=zz2" \
+     -F "type=Luxury" \
+     -F "address=thabzimbi, New York, NY" \
+     -F "email=info@grandplaza.com" \
+     -F "phone=+1-555-123-4567" \
+     -F "pricePerNight=250" \
+     -F "pricePerDay=1000" \
+     -F "numberOfRoomsAvailable=30" \
+     -F "images=@C:/Users/tshid/Pictures/images/hotel.jpg" \
+     -F "title_hotel.jpg=Hotel Front" \
+     -F "caption_hotel.jpg=Beautiful view of the front" \
+     -F "images=@C:/Users/tshid/Pictures/images/hotel2.jpg" \
+     -F "title_hotel2.jpg=Hotel Room" \
+     -F "caption_hotel2.jpg=Luxurious room with a king-sized bed"
+
+curl -X GET "http://localhost:3000/api/hotel/67ac587cf7a5dd7ec45a50e9" \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YWM1ODdjZjdhNWRkN2VjNDVhNTBlOSIsIm5hbWUiOiJtaWtlIiwiaWF0IjoxNzM5NDM2NzYyLCJleHAiOjE3Mzk0NTQ3NjJ9.w84CtLmI1ND9EdK_TgVDsuo5-Jzk7LTKwoXWzTldrtU"
